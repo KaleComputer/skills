@@ -118,6 +118,8 @@ Record a path, evidence and one or more labels for every finding:
 - **Bloated:** breaks [Skill Shape](#skill-shape), for example a description that explains what
   the skill does instead of when to use it.
 - **Duplicated:** multiple files own the same workflow or truth.
+- **Misplaced:** a rule used in two or more repositories lives in an `AGENTS.md` (or is copied into
+  several), or a repository-specific rule lives in a shared skill.
 - **Conflicting:** instructions disagree about authority, sequence, safety or completion.
 - **Stale:** names, tools, models, people, paths, orgs or policies no longer match the system.
 - **Hidden:** an instruction file that a harness never loads (for Claude Code, an `AGENTS.md` next
@@ -135,6 +137,10 @@ Assign one verdict per item: `keep`, `fix`, `merge`, `split`, `explicit-only`, `
 
 - Prefer removing sediment over explaining around it.
 - Make vendored or niche plugins **opt-in** instead of part of the default install.
+- Shared rules belong in skills. Anything used in two or more repositories becomes or stays a
+  skill; `AGENTS.md` holds only rules specific to its own repository. Never copy a shared rule into
+  several `AGENTS.md` files, and never retire a skill by pasting its content into `AGENTS.md`:
+  shrinking skills must not grow instruction files.
 - Keep one instruction file per directory. Prefer `AGENTS.md`, which Claude Code and Codex both
   read; delete a `CLAUDE.md` that only points at it.
 - Make every content change reach installs: bump plugin versions on change (or let the commit
@@ -177,7 +183,8 @@ across harnesses, and no instruction file hidden by another.
 Return:
 
 - the before/after table from `measure-context.py` (skills, explicit-only count, always-loaded
-  description chars and estimated tokens, `SKILL.md` total, percentages);
+  description chars and estimated tokens, `SKILL.md` total, instruction-file chars, percentages);
+  instruction files that grew are a regression to explain or undo;
 - per skill: always-on or explicit-only, uses with time window and source, missing requirements,
   recommendation and a one-line reason, strongest removal candidates first;
 - removed, added and renamed skills;
