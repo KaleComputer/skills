@@ -1,6 +1,6 @@
 {
   "name": "skills",
-  "description": "Agent skills from Kale: purge audits, prunes, writes and reviews agent skills and agent context.",
+  "description": "Agent skills from Kale: purge audits, prunes, writes and reviews agent skills and agent context; team-lead plans from your tracker and runs worker subagents, one PR each.",
   "author": {
     "name": "Kale",
     "url": "https://github.com/KaleComputer"
@@ -8,12 +8,12 @@
   "homepage": "https://github.com/KaleComputer/skills",
   "repository": "https://github.com/KaleComputer/skills",
   "license": "MIT",
-  "keywords": ["skills", "agent-context", "skill-authoring"],
+  "keywords": ["skills", "agent-context", "skill-authoring", "team-lead", "subagents"],
   "skills": "./skills/",
   "interface": {
     "displayName": "Kale Skills",
     "shortDescription": "Agent skills from Kale.",
-    "longDescription": "purge audits, prunes, writes and reviews agent skills, AGENTS.md and CLAUDE.md files, and plugins, and measures the context they cost before and after.",
+    "longDescription": "purge audits, prunes, writes and reviews agent skills, AGENTS.md and CLAUDE.md files, and plugins, and measures the context they cost before and after. team-lead makes one session plan from your issue tracker, write tickets and run worker subagents in their own git worktrees, one pull request each.",
     "developerName": "Kale",
     "category": "Workflow",
     "capabilities": ["Interactive", "Read", "Write"],

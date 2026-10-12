@@ -47,6 +47,25 @@ on a schedule (monthly works for most repositories; weekly if many people or age
 Purge is explicit-only, so it costs no context until you run it: `/purge` (`/skills:purge` as a
 plugin) in Claude Code, `$purge` in Codex.
 
+### team-lead
+
+Agents ship more when one session plans and others build, but a single agent that both plans and
+edits loses track, and parallel agents trip over each other in one checkout. Team-lead makes one
+session the lead: it plans from your issue tracker and docs, cuts the work into one-ticket,
+one-PR, one-repo tickets, asks you every open question in one batch, and launches nothing until
+you approve. Then it runs worker subagents, each in its own git worktree, following that repo's
+`AGENTS.md` and review loop, and reports one line per ticket. The lead never edits, merges or
+deploys. Repos, tracker, worktree root and review bot come from the lead folder's `AGENTS.md`.
+
+**Use when:**
+
+- You want one agent session to plan a project or milestone and delegate the implementation
+- A feature spans several repositories and needs one PR per repo, in order
+- You run several coding agents in parallel and want them isolated in worktrees
+
+**Setup:** give the lead its own folder with an `AGENTS.md` that says to always use the
+`team-lead` skill and lists the project settings. The model can load it on its own.
+
 ---
 
 Skills follow the [Agent Skills](https://agentskills.io/) format.

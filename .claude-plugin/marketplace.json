@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "skills",
-      "description": "Agent skills from Kale: purge audits, prunes, writes and reviews agent skills and agent context.",
+      "description": "Agent skills from Kale: purge audits, prunes, writes and reviews agent skills and agent context; team-lead plans from your tracker and runs worker subagents, one PR each.",
       "source": "./",
       "category": "workflow",
       "homepage": "https://github.com/KaleComputer/skills"
