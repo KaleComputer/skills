@@ -1,0 +1,27 @@
+{
+  "name": "skills",
+  "description": "Agent skills from Kale: purge audits, prunes, writes and reviews agent skills and agent context.",
+  "author": {
+    "name": "Kale",
+    "url": "https://github.com/KaleComputer"
+  },
+  "homepage": "https://github.com/KaleComputer/skills",
+  "repository": "https://github.com/KaleComputer/skills",
+  "license": "MIT",
+  "keywords": ["skills", "agent-context", "skill-authoring"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Kale Skills",
+    "shortDescription": "Agent skills from Kale.",
+    "longDescription": "purge audits, prunes, writes and reviews agent skills, AGENTS.md and CLAUDE.md files, and plugins, and measures the context they cost before and after.",
+    "developerName": "Kale",
+    "category": "Workflow",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://github.com/KaleComputer/skills",
+    "defaultPrompt": [
+      "Run the purge skill on this repository."
+    ],
+    "brandColor": "#334155",
+    "screenshots": []
+  }
+}

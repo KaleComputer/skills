@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "kalecomputer",
+  "description": "Agent skills from Kale.",
+  "owner": {
+    "name": "Kale",
+    "url": "https://github.com/KaleComputer"
+  },
+  "plugins": [
+    {
+      "name": "skills",
+      "description": "Agent skills from Kale: purge audits, prunes, writes and reviews agent skills and agent context.",
+      "source": "./",
+      "category": "workflow",
+      "homepage": "https://github.com/KaleComputer/skills"
+    }
+  ]
+}
