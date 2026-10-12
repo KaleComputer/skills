@@ -1,6 +1,6 @@
 {
   "name": "skills",
-  "description": "Agent skills from Kale: purge audits, prunes, writes and reviews agent skills and agent context.",
+  "description": "Agent skills from Kale: purge audits, prunes, writes and reviews agent skills and agent context; team-lead plans from your tracker and runs worker subagents, one PR each.",
   "author": {
     "name": "Kale",
     "url": "https://github.com/KaleComputer"
@@ -8,6 +8,6 @@
   "homepage": "https://github.com/KaleComputer/skills",
   "repository": "https://github.com/KaleComputer/skills",
   "license": "MIT",
-  "keywords": ["skills", "agent-context", "skill-authoring"],
+  "keywords": ["skills", "agent-context", "skill-authoring", "team-lead", "subagents"],
   "skills": "./skills"
 }
