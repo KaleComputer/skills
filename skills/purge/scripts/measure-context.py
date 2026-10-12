@@ -10,8 +10,16 @@ Usage:
   measure-context.py [ROOT]                      measure the working tree
   measure-context.py --ref REF [ROOT]            measure a git ref
   measure-context.py --before REF --after REF    compare two git refs
+  measure-context.py --usage GLOB [--usage GLOB] [--since DAYS]
+                                                 count skill uses in session transcripts
   add --json for machine-readable output, --vendored DIR (repeatable) to report
   third-party skill folders separately.
+
+--usage reads Claude Code and Codex JSONL transcripts (for example
+'~/.claude/projects/**/*.jsonl', '~/.codex/sessions/**/*.jsonl') and counts, per
+skill, the sessions that invoked it (Skill tool calls, slash commands, injected
+skill files) and the sessions that only read a skills/<name>/SKILL.md with a
+tool. It prints names, counts and dates only, never transcript content.
 
 Token counts are estimates (characters / 4). Stdlib only.
 """
@@ -19,11 +27,14 @@ Token counts are estimates (characters / 4). Stdlib only.
 from __future__ import annotations
 
 import argparse
+import glob
 import json
 import os
 import re
 import subprocess
 import sys
+import time
+from datetime import datetime
 from pathlib import PurePosixPath
 
 SKILL_RE = re.compile(r"(^|/)skills/[^/]+/SKILL\.md$")
@@ -142,6 +153,107 @@ def measure(tree: Tree, vendored: list[str]) -> dict:
     }
 
 
+SKILL_PATH_RE = re.compile(r"skills/([A-Za-z0-9_.:-]+)/SKILL\.md")
+INJECTED_RE = re.compile(r"<path>[^<]*?skills/([A-Za-z0-9_.:-]+)/SKILL\.md</path>")
+COMMAND_RE = re.compile(r"<command-name>/?([A-Za-z0-9_.:-]+)</command-name>")
+TOOL_CALL_TYPES = {"custom_tool_call", "function_call", "local_shell_call"}
+
+
+def line_skills(entry: dict) -> tuple[set[str], set[str]]:
+    """Skill names one transcript line invokes, and names it only reads via a tool."""
+    invoked: set[str] = set()
+    read: set[str] = set()
+    payload = entry.get("payload")
+    if isinstance(payload, dict):  # Codex
+        if payload.get("type") in TOOL_CALL_TYPES:
+            read.update(SKILL_PATH_RE.findall(json.dumps(payload)))
+        elif payload.get("type") == "message" and payload.get("role") == "user":
+            invoked.update(INJECTED_RE.findall(json.dumps(payload)))
+        return invoked, read
+    message = entry.get("message")
+    if not isinstance(message, dict) or not isinstance(message.get("content"), (list, str)):
+        return invoked, read
+    content = message["content"]
+    if message.get("role") == "user":
+        invoked.update(COMMAND_RE.findall(content if isinstance(content, str) else json.dumps(content)))
+        return invoked, read
+    for item in content if isinstance(content, list) else []:
+        if isinstance(item, dict) and item.get("type") == "tool_use":
+            tool_input = item.get("input") or {}
+            if item.get("name") == "Skill" and isinstance(tool_input.get("skill"), str):
+                invoked.add(tool_input["skill"].lstrip("/"))
+            else:
+                read.update(SKILL_PATH_RE.findall(json.dumps(tool_input)))
+    return invoked, read
+
+
+def timestamp(entry: dict, fallback: float) -> float:
+    value = entry.get("timestamp")
+    if isinstance(value, str):
+        try:
+            return datetime.fromisoformat(value.replace("Z", "+00:00")).timestamp()
+        except ValueError:
+            pass
+    return fallback
+
+
+def usage(patterns: list[str], since_days: float | None) -> dict:
+    cutoff = time.time() - since_days * 86400 if since_days else 0.0
+    paths = sorted({p for pat in patterns for p in glob.glob(os.path.expanduser(pat), recursive=True)})
+    skills: dict[str, dict] = {}
+    sessions = {"claude": 0, "codex": 0}
+    for path in paths:
+        harness, active = None, False
+        invoked: set[str] = set()
+        read: set[str] = set()
+        last: dict[str, float] = {}
+        mtime = os.path.getmtime(path)
+        with open(path, encoding="utf-8", errors="replace") as handle:
+            for line in handle:
+                try:
+                    entry = json.loads(line)
+                except ValueError:
+                    continue
+                if not isinstance(entry, dict):
+                    continue
+                harness = harness or ("codex" if "payload" in entry else "claude")
+                when = timestamp(entry, mtime)
+                if when < cutoff:
+                    continue
+                active = True
+                inv, rd = line_skills(entry)
+                invoked |= inv
+                read |= rd
+                for name in inv | rd:
+                    last[name] = max(last.get(name, 0.0), when)
+        if harness is None or not active:
+            continue
+        sessions[harness] += 1
+        for name in invoked | read:
+            row = skills.setdefault(name, {"claude": 0, "codex": 0, "read_only": 0, "last": 0.0})
+            if name in invoked:
+                row[harness] += 1
+            else:
+                row["read_only"] += 1
+            row["last"] = max(row["last"], last[name])
+    for row in skills.values():
+        row["last"] = datetime.fromtimestamp(row["last"]).strftime("%Y-%m-%d")
+    return {"files": len(paths), "sessions": sessions, "since_days": since_days, "skills": skills}
+
+
+def print_usage(data: dict) -> None:
+    window = f"last {data['since_days']:g} days" if data["since_days"] else "all time"
+    print(f"== usage ({window}): {data['sessions']['claude']} Claude Code and "
+          f"{data['sessions']['codex']} Codex sessions in {data['files']} transcript files")
+    print("  claude/codex: sessions that invoked the skill (Skill tool, slash command, injected file);")
+    print("  read: sessions that only read its SKILL.md with a tool (loads, audits or edits). Subagents count separately.")
+    print(f"  {'skill':40} {'claude':>6} {'codex':>6} {'read':>5}  last")
+    rows = sorted(data["skills"].items(),
+                  key=lambda kv: (-(kv[1]["claude"] + kv[1]["codex"]), -kv[1]["read_only"], kv[0]))
+    for name, row in rows:
+        print(f"  {name:40} {row['claude']:>6} {row['codex']:>6} {row['read_only']:>5}  {row['last']}")
+
+
 def pct(before: int, after: int) -> str:
     return "n/a" if not before else f"{(after - before) / before * 100:+.0f}%"
 
@@ -174,7 +286,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--after")
     parser.add_argument("--vendored", action="append", default=[])
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--usage", action="append", metavar="GLOB",
+                        help="transcript glob to count skill uses in (repeatable)")
+    parser.add_argument("--since", type=float, metavar="DAYS", help="with --usage, only the last DAYS days")
     args = parser.parse_args(argv)
+
+    if args.usage:
+        data = usage(args.usage, args.since)
+        if args.json:
+            print(json.dumps(data, indent=2))
+        else:
+            print_usage(data)
+        return 0
 
     if args.before or args.after:
         if not (args.before and args.after):

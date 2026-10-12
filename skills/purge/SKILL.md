@@ -1,6 +1,6 @@
 ---
 name: purge
-description: Use when asked to audit, prune, write or review agent skills, SKILL.md files, AGENTS.md or CLAUDE.md files, plugins or other agent context.
+description: Use when asked to audit, prune, write or review agent skills, SKILL.md files, AGENTS.md or CLAUDE.md files, plugins or other agent context, or to find unneeded skills.
 disable-model-invocation: true
 ---
 
@@ -14,6 +14,8 @@ Keep agent context small, routable and correct. Two modes share one standard:
 - **Purge a repository or machine:** audit the whole agent-facing surface with steps 1-7 and shrink
   it to the smallest reliable instruction set. Optimize for what every session pays, not for the
   smallest diff, and measure before and after so the result is a number, not an impression.
+  Judge every skill on two axes: what it costs, and whether the agents that load it need it and
+  can run it.
 
 ## Skill Shape
 
@@ -72,6 +74,19 @@ a sibling `CLAUDE.md`, explicit-only flags that disagree between harnesses, and 
 30 words. After the changes merge, run it with `--before <old-ref> --after <new-ref>` for the
 before/after table.
 
+Count real usage from the transcripts the human can share, before you read any skill files
+yourself (your own reads show up as uses):
+
+```bash
+python3 <skill-dir>/scripts/measure-context.py --since 30 \
+  --usage '~/.claude/projects/**/*.jsonl' --usage '~/.codex/sessions/**/*.jsonl'
+```
+
+It counts, per skill name, the sessions that invoked it and the sessions that only read its
+`SKILL.md`, and prints counts and dates only. Search old and plugin-prefixed names too
+(`<plugin>:<skill>`). Usage outside these transcripts (cloud agents, other machines) is unknown;
+say so instead of guessing.
+
 ## 2. Inventory
 
 1. Find every agent-facing file: skills, `AGENTS.md`, `CLAUDE.md`, agent definitions, generated
@@ -79,16 +94,23 @@ before/after table.
 2. Read the repository's rules and how skills are distributed: which plugins are installed by
    default, where the marketplace points, and how installs learn about new versions.
 3. Separate authored sources from generated mirrors and vendored third-party content.
-4. Find real usage. Search session transcripts the human can share (for example
-   `~/.claude/projects/*/*.jsonl`, `~/.codex/sessions/`) for each skill name, and list skills that
-   never ran or only ran inside retired workflows. Identify consumers, compatibility paths and
-   tests before calling anything obsolete.
+4. For every skill, record what it needs to work and who it is for: CLIs and binaries, MCP
+   servers or tools, credentials and environment variables, accounts or external systems, other
+   skills and files it references, and the role it serves.
+5. Check those requirements against the agents that load the skill: `command -v <cli>`, the
+   configured MCP servers or connectors, and whether required environment variables are set
+   (names only; never print values).
+6. Join the usage counts from [Measure](#1-measure) to the inventory, and list skills that never
+   ran or only ran inside retired workflows. Identify consumers, compatibility paths and tests
+   before calling anything obsolete.
 
 ## 3. Diagnose
 
 Record a path, evidence and one or more labels for every finding:
 
 - **Unused:** no recent invocation and no live consumer; the workflow it serves is retired.
+- **Unreachable:** it depends on a CLI, credential, MCP server or system that the agents loading
+  it do not have, so it cannot run where it is installed.
 - **Always-on but rare:** only ever run on an explicit human or scheduled request, yet its
   description loads in every session.
 - **Broken:** invalid metadata, dead links, missing resources, impossible steps, failing validation.
@@ -119,8 +141,11 @@ Assign one verdict per item: `keep`, `fix`, `merge`, `split`, `explicit-only`, `
   identify the version), and point the marketplace at the current repository.
 - Treat compatibility aliases as interfaces until their consumers are checked.
 
-Present the verdicts to the human as choices, grouped by verdict, with the measured cost of each
-item, before acting on anything destructive.
+Give every skill a one-line recommendation (`keep`, `explicit-only`, `merge` or `retire`) with its
+evidence: uses in the last N days, missing requirements, overlapping skills and description cost.
+Sort so the strongest removal candidates come first. Present the verdicts to the human as
+choices, grouped by verdict, with the measured cost of each item, before acting on anything
+destructive.
 
 ## 5. Change Safely
 
@@ -153,11 +178,14 @@ Return:
 
 - the before/after table from `measure-context.py` (skills, explicit-only count, always-loaded
   description chars and estimated tokens, `SKILL.md` total, percentages);
+- per skill: always-on or explicit-only, uses with time window and source, missing requirements,
+  recommendation and a one-line reason, strongest removal candidates first;
 - removed, added and renamed skills;
 - findings with path, evidence and verdict;
 - changes made, with PR links;
 - validation and eval results, including the baseline;
-- decisions still waiting on the human.
+- decisions still waiting on the human, and what could not be verified (for example usage that
+  happens outside the transcripts you could read).
 
 ## Provenance
 
