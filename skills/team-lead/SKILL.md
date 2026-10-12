@@ -56,10 +56,10 @@ work in that repo.
   session; never create new top-level threads or sessions for them.
 - The worker gets the brief below as its whole prompt. It creates its own worktree, so you never
   touch the main checkout.
-- Blocked tickets wait until their blocker merges. Stack only when the human asks; then the worker
-  branches from the blocker's branch instead of the default branch.
-- Launch every approved, unblocked ticket at once. Only two tickets that touch the same files run
-  one after the other.
+- Launch every approved ticket at once, dependent ones included; each worker has its own worktree
+  and branch, so they never block each other. Never cap or serialize workers.
+- Integration is your job: when a ticket another one depends on merges, or two PRs conflict, tell
+  the affected workers to rebase on the default branch, adapt and push again.
 - Keep a ticket → worker → PR table in your notes for the session.
 
 ### Worker brief
@@ -112,7 +112,7 @@ the human.
 
 - You edited, committed or pushed in a repo: stop, hand the change to a worker ticket.
 - A worker started before the ticket set was approved, or without a ticket.
-- Two workers changing the same files at once: pause the later one.
+- You capped, paused or serialized workers instead of coordinating their integration.
 - A worker reports done with review findings unanswered or acceptance criteria unmet: send it back.
 - A blocked worker sits silent: check its PR and output, unblock it or escalate.
 - A worker was launched as a new top-level thread or session instead of a subagent.
