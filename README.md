@@ -1,20 +1,50 @@
 # Skills
 
-Skills follow the [Agent Skills](https://agentskills.io/) format.
+The agent skills we use at Kale.
+
+## Installation
 
 ```bash
 npx skills add KaleComputer/skills
 ```
 
-Claude Code: `/plugin marketplace add KaleComputer/skills`, then `/plugin install skills@kalecomputer`.
-Codex: `codex plugin marketplace add KaleComputer/skills`, then `codex plugin add skills@kalecomputer`.
+Or as a plugin:
 
-## purge
+```bash
+# Claude Code
+/plugin marketplace add KaleComputer/skills
+/plugin install skills@kalecomputer
 
-Audits, prunes, writes and reviews agent skills and agent context (`SKILL.md`, `AGENTS.md`,
-`CLAUDE.md`, plugins), measuring what every session pays before and after. Explicit-only: run it
-with `/purge` (`/skills:purge` as a plugin) or `$purge` in Codex.
+# Codex
+codex plugin marketplace add KaleComputer/skills
+codex plugin add skills@kalecomputer
+```
 
-On Kale's own agent tooling it took the skill descriptions loaded into every session from 9,489 to
-1,905 characters (-80%, about 2,370 to 480 tokens), and skills from 27 to 21, 6 of them
-explicit-only.
+## Skills
+
+### purge
+
+Every installed skill puts its description into every agent session, and every `AGENTS.md` or
+`CLAUDE.md` line is read before the agent does anything. Over time skills pile up, overlap, go
+stale and trigger at the wrong moment, so each session pays for context it never uses and agents
+pick the wrong workflow. Purge measures what your agent context costs per session, finds unused,
+duplicated, stale, hidden and misrouted instructions with evidence, proposes what to keep, fix,
+merge, make explicit-only or retire, asks before anything destructive, and reports the
+before/after numbers. It also writes and reviews single skills.
+
+**Use when:**
+
+- Your skill list or `AGENTS.md` files have grown and sessions feel slow or unfocused
+- Agents pick the wrong skill, or a skill does not trigger
+- You are writing a new skill or reviewing one before shipping it
+- You want to know how much context your skills cost per session
+
+**When to run:** after adding or changing several skills, before rolling skills out to a team, and
+on a schedule (monthly works for most repositories; weekly if many people or agents add skills).
+
+Purge is explicit-only, so it costs no context until you run it: `/purge` (`/skills:purge` as a
+plugin) in Claude Code, `$purge` in Codex.
+
+---
+
+Skills follow the [Agent Skills](https://agentskills.io/) format.
