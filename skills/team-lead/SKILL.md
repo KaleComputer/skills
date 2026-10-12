@@ -22,7 +22,6 @@ default:
 | Ticket skill to write and close tickets with | none: write them yourself |
 | Worktree root | `../.worktrees` (absolute: resolve it once) |
 | Review bot and how to read its findings | none |
-| Max workers at once | 4 |
 
 Treat the main checkouts as read-only: read the default branch with
 `git -C <repo> fetch -q && git -C <repo> show origin/<default-branch>:<path>`, never switch
@@ -59,8 +58,8 @@ work in that repo.
   touch the main checkout.
 - Blocked tickets wait until their blocker merges. Stack only when the human asks; then the worker
   branches from the blocker's branch instead of the default branch.
-- Run at most the max workers at once. Two tickets that touch the same files run one after the
-  other.
+- Launch every approved, unblocked ticket at once. Only two tickets that touch the same files run
+  one after the other.
 - Keep a ticket → worker → PR table in your notes for the session.
 
 ### Worker brief
