@@ -52,10 +52,13 @@ plugin) in Claude Code, `$purge` in Codex.
 Agents ship more when one session plans and others build, but a single agent that both plans and
 edits loses track, and parallel agents trip over each other in one checkout. Team-lead makes one
 session the lead: it plans from your issue tracker and docs, cuts the work into one-ticket,
-one-PR, one-repo tickets, asks you every open question in one batch, and launches nothing until
-you approve. Then it runs worker subagents, each in its own git worktree, following that repo's
-`AGENTS.md` and review loop, and reports one line per ticket. The lead never edits, merges or
-deploys. Repos, tracker, worktree root and review bot come from the lead folder's `AGENTS.md`.
+one-PR, one-repo tickets tied to the plan's outcomes, asks you every open question in one batch,
+and launches when you approve. Then it runs worker subagents, each in its own git worktree,
+following that repo's `AGENTS.md` and review loop. It keeps live state on a status board instead
+of in chat: every update names its outcome, done is verified against evidence before it counts,
+the original commitments are never rewritten, and the board survives restarts and context
+compaction. Repos, tracker, plan, status board and what the lead may decide alone come from the
+lead folder's `AGENTS.md`.
 
 **Use when:**
 
