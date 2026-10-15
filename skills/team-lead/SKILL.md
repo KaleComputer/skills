@@ -182,10 +182,10 @@ must know or do. The board gets every update; chat carries only what the Chat ru
   question on the board (none announced as coming), every open question sits on the card it
   blocks, no card has stale "needs you" text, no card or work item duplicates a step of an
   existing outcome, and every card whose direction changed shows the new status, next step and
-  work items with obsolete questions resolved. Resolve or withdraw every
-  open question whose subject already happened or was decided elsewhere (merged, done, answered in
-  chat), and check that the board's needs-the-human count equals the items it lists. Fix gaps
-  before saying anything else.
+  work items with obsolete questions resolved. Resolve or withdraw every open question whose
+  subject already happened or was decided elsewhere (merged, done, answered in chat), and check
+  that the board's needs-the-human count equals the items it lists. Fix gaps before saying
+  anything else.
 
 ## 6. Restart And Compaction
 
