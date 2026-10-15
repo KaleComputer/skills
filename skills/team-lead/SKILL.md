@@ -144,9 +144,9 @@ must know or do. The board gets every update; chat carries only what the Chat ru
   carries at least one open question.
 - **Moves.** When you create, split, merge or move an outcome or work item, move its open
   questions with it and fix any text on the old card that pointed at them.
-- **Check what the human sees.** After changing the board, open the affected cards in the views
-  the human uses (for example overview, zoomed-in timeline, phone width) and check them there;
-  data read back through the CLI or API alone does not count.
+- **Board UI changes.** The board's data is the truth and enough to audit content. After a change
+  to the board's UI, the worker who made it verifies the views the human uses (for example
+  overview, zoomed-in timeline, phone width) with screenshots.
 - **Direction changes.** When a decision changes an outcome's direction (for example a plan is
   replaced), update that card's status text, next step and work items in the same step, and
   resolve or withdraw the questions the decision made obsolete.
@@ -235,8 +235,7 @@ do not remember:
 - An open question asked the human for something that had already happened or been decided (a PR
   already merged, a step done, an answer given in chat), or the board's needs-the-human count did
   not match the items it lists.
-- You changed the board and checked only the CLI or API data, not the cards in the views the
-  human uses.
+- A change to the board's UI shipped without screenshots of the views the human uses.
 - A worker's work ended in a board step for the human that was not in its brief, so it waited on
   your memory instead of happening with the merge.
 - A scheduled poll found no new answers and skipped the audit.
