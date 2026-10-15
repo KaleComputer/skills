@@ -174,8 +174,10 @@ must know or do. The board gets every update; chat carries only what the Chat ru
   told the human about is an open question on the board (none announced as coming), every open
   question sits on the card it blocks, no card has stale "needs you" text, no card or work item
   duplicates a step of an existing outcome, and every card whose direction changed shows the new
-  status, next step and work items with obsolete questions resolved. Fix gaps before saying
-  anything else.
+  status, next step and work items with obsolete questions resolved. Resolve or withdraw every
+  open question whose subject already happened or was decided elsewhere (merged, done, answered in
+  chat), and check that the board's needs-the-human count equals the items it lists. Fix gaps
+  before saying anything else.
 
 ## 6. Restart And Compaction
 
@@ -186,8 +188,11 @@ do not remember:
 2. For each worker row still in flight, check whether its worker is alive. If not, read its
    worktree (`git -C <worktree> status`, unpushed commits) and PR, then resume it or relaunch it
    with its brief plus "continue from <state>". Never start a twin.
-3. Run the Report audit and fix its gaps.
-4. Act first on answered questions that no one has acted on yet. Record what you reconciled.
+3. For every worker that stopped, finished or died, check what it actually delivered (PR, files,
+   board records) against each item in its brief, and finish or resume the missing parts. A
+   promised board question or other item meant for the human comes first: post it yourself now.
+4. Run the Report audit and fix its gaps.
+5. Act first on answered questions that no one has acted on yet. Record what you reconciled.
 
 ## Safety
 
@@ -217,3 +222,8 @@ do not remember:
 - A decision changed an outcome's direction but its card kept the old status, next step, work
   items or now-obsolete questions.
 - You opened a new card or work item for a step that belongs to an existing outcome's card.
+- A worker stopped (finished, died or restarted) before delivering part of its brief, such as a
+  board question for the human, and no one compared its output to the brief.
+- An open question asked the human for something that had already happened or been decided (a PR
+  already merged, a step done, an answer given in chat), or the board's needs-the-human count did
+  not match the items it lists.
