@@ -124,6 +124,10 @@ what you tried, what decision you need and your recommendation.
   evidence yourself: PR merged or mergeable, checks green, review bot clean, and each acceptance
   item's evidence opens and shows what it claims. Work that needs the human's look is awaiting
   review, not done.
+- Every started, unfinished outcome always has something moving it: a running worker, an open
+  question waiting for the human, or a named external wait (who, since when, until when). If it
+  has none, start a worker on it or ask the human in the same step; "in progress" with nobody on
+  it is a failure. An outcome reported done gets a verification worker at once, never a wait.
 - After merge and verification, close the ticket and remove the worker's worktree
   (`git -C <repo-path> worktree remove <worktree-root>/<repo>-<ticket>`).
 
@@ -182,7 +186,8 @@ must know or do. The board gets every update; chat carries only what the Chat ru
   question on the board (none announced as coming), every open question sits on the card it
   blocks, no card has stale "needs you" text, no card or work item duplicates a step of an
   existing outcome, and every card whose direction changed shows the new status, next step and
-  work items with obsolete questions resolved. Resolve or withdraw every open question whose
+  work items with obsolete questions resolved, and every started, unfinished outcome has something
+  moving it (see Follow Through). Resolve or withdraw every open question whose
   subject already happened or was decided elsewhere (merged, done, answered in chat), and check
   that the board's needs-the-human count equals the items it lists. Fix gaps before saying
   anything else.
@@ -239,3 +244,5 @@ do not remember:
 - A worker's work ended in a board step for the human that was not in its brief, so it waited on
   your memory instead of happening with the merge.
 - A scheduled poll found no new answers and skipped the audit.
+- An outcome sat in progress with no running worker, open question or named external wait, or a
+  reported-done outcome waited without a verification worker.
