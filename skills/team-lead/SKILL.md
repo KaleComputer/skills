@@ -74,6 +74,9 @@ wins for that repo; raise the conflict with the human.
 - Before launching, write the worker's row on the status board: outcome, ticket, worktree, branch,
   worker or task id, and the brief (or where it is stored). Update the row on every report. Your
   context is not state: compaction and restarts erase it.
+- When a ticket's work ends in something for the human (a question to post, a question to close
+  once its PR merges), put that board step in the brief so the worker does it in the same step as
+  the merge or delivery, never left to your memory.
 - Launch every approved ticket at once, dependent ones included; each worker has its own worktree
   and branch, so they never block each other. Never cap or serialize workers.
 - Integration is your job: when a ticket another one depends on merges, or two PRs conflict, tell
@@ -97,6 +100,7 @@ worktree. Then read that worktree's AGENTS.md and follow it. Commit and push you
 meaningful step so a restart loses nothing.
 Goal: <one sentence>.
 Skills: <ticket skill, repo skills><, none>.
+Board: <"when <event>, post | close <question> on the status board in the same step" | none>.
 Data: <"touches <surface>: follow the repo's privacy or data rules" | "no user data surface">.
 Authority: <"Merge when CI is green and <review bot> is clean, then deploy as the repo's AGENTS.md
 says" | "Do not merge or deploy">. Do not widen scope; report new work you find instead.
@@ -140,6 +144,9 @@ must know or do. The board gets every update; chat carries only what the Chat ru
   carries at least one open question.
 - **Moves.** When you create, split, merge or move an outcome or work item, move its open
   questions with it and fix any text on the old card that pointed at them.
+- **Board UI changes.** The board's data is the truth and enough to audit content. After a change
+  to the board's UI, the worker who made it verifies the views the human uses (for example
+  overview, zoomed-in timeline, phone width) with screenshots.
 - **Direction changes.** When a decision changes an outcome's direction (for example a plan is
   replaced), update that card's status text, next step and work items in the same step, and
   resolve or withdraw the questions the decision made obsolete.
@@ -170,11 +177,14 @@ must know or do. The board gets every update; chat carries only what the Chat ru
   on the board. Each is one line naming the board item. Never send progress notes, merges,
   restarts, resumed workers or other routine updates, never paste the board or post a fresh
   overview.
-- **Audit.** Before every report and on every restart or compaction, check that every need you
-  told the human about is an open question on the board (none announced as coming), every open
-  question sits on the card it blocks, no card has stale "needs you" text, no card or work item
-  duplicates a step of an existing outcome, and every card whose direction changed shows the new
-  status, next step and work items with obsolete questions resolved. Fix gaps before saying
+- **Audit.** Before every report, on every scheduled poll (also one with no new answers) and on
+  every restart or compaction, check that every need you told the human about is an open
+  question on the board (none announced as coming), every open question sits on the card it
+  blocks, no card has stale "needs you" text, no card or work item duplicates a step of an
+  existing outcome, and every card whose direction changed shows the new status, next step and
+  work items with obsolete questions resolved. Resolve or withdraw every open question whose
+  subject already happened or was decided elsewhere (merged, done, answered in chat), and check
+  that the board's needs-the-human count equals the items it lists. Fix gaps before saying
   anything else.
 
 ## 6. Restart And Compaction
@@ -186,8 +196,11 @@ do not remember:
 2. For each worker row still in flight, check whether its worker is alive. If not, read its
    worktree (`git -C <worktree> status`, unpushed commits) and PR, then resume it or relaunch it
    with its brief plus "continue from <state>". Never start a twin.
-3. Run the Report audit and fix its gaps.
-4. Act first on answered questions that no one has acted on yet. Record what you reconciled.
+3. For every worker that stopped, finished or died, check what it actually delivered (PR, files,
+   board records) against each item in its brief, and finish or resume the missing parts. A
+   promised board question or other item meant for the human comes first: post it yourself now.
+4. Run the Report audit and fix its gaps.
+5. Act first on answered questions that no one has acted on yet. Record what you reconciled.
 
 ## Safety
 
@@ -217,3 +230,12 @@ do not remember:
 - A decision changed an outcome's direction but its card kept the old status, next step, work
   items or now-obsolete questions.
 - You opened a new card or work item for a step that belongs to an existing outcome's card.
+- A worker stopped (finished, died or restarted) before delivering part of its brief, such as a
+  board question for the human, and no one compared its output to the brief.
+- An open question asked the human for something that had already happened or been decided (a PR
+  already merged, a step done, an answer given in chat), or the board's needs-the-human count did
+  not match the items it lists.
+- A change to the board's UI shipped without screenshots of the views the human uses.
+- A worker's work ended in a board step for the human that was not in its brief, so it waited on
+  your memory instead of happening with the merge.
+- A scheduled poll found no new answers and skipped the audit.
