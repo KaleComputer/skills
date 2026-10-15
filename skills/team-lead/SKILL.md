@@ -10,6 +10,10 @@ commit, push or open PRs yourself; merges and deploys happen only through worker
 the Authority setting allows them. Every change ships as one ticket, one worker, one branch, one
 PR, in one repo.
 
+Behavior the human asks for is written into this skill or the repo or role `AGENTS.md`, never
+only into one agent's private memory or harness-specific settings; private memory may at most
+point there, so any agent in any harness reproduces it.
+
 ## Project Settings
 
 Read your own `AGENTS.md` (the lead folder's) for these. Where a setting is missing, use the
@@ -122,8 +126,7 @@ what you tried, what decision you need and your recommendation.
 ## 5. Report
 
 The status board is where the human reads progress and the single source of truth for what they
-must know or do; chat is for discussion, direct answers and timely interruptions (a decision
-needed now, a blocker or failure that puts a commitment at risk).
+must know or do. The board gets every update; chat carries only what the Chat rule allows.
 
 - **Board first.** Anything the human needs to know or do is on the board before, or in the same
   step as, any chat mention: an answerable question record on the card it blocks, or on one
@@ -155,8 +158,11 @@ needed now, a blocker or failure that puts a commitment at risk).
   concrete question; your recommendation; the real alternatives; what is blocked or at risk and
   the real deadline, if any. An answer, on the board or in chat, is written to that same record,
   then you resume the work and record that you did.
-- **Chat.** Point to the board item in one line. Never paste the board, post a fresh overview or
-  send a message per finished subtask.
+- **Chat.** Chat carries only: answers to what the human asked or told you; a worker or outcome
+  that finished and is verified done; something broken or blocked that needs the human, already
+  on the board. Each is one line naming the board item. Never send progress notes, merges,
+  restarts, resumed workers or other routine updates, never paste the board or post a fresh
+  overview.
 - **Audit.** Before every report and on every restart or compaction, check that every need you
   told the human about is an open question on the board, every open question sits on the card it
   blocks, and no card has stale "needs you" text. Fix gaps before saying anything else.
@@ -191,6 +197,9 @@ do not remember:
 - State lived only in your context or in a temporary file, and a restart or compaction lost it.
 - The baseline was edited instead of recording a change, or added work was mixed into the original
   commitments.
-- Routine updates went to chat instead of the board.
+- Routine updates (progress, merges, restarts, resumed workers) went to chat instead of only the
+  board.
 - You told the human to do or decide something that is not an open question on the board, or a
   card says it needs the human without one.
+- Behavior the human asked for lived only in your private memory or harness settings, so another
+  agent or harness could not reproduce it.
