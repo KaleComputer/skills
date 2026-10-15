@@ -102,13 +102,17 @@ Goal: <one sentence>.
 Skills: <ticket skill, repo skills><, none>.
 Board: <"when <event>, post | close <question> on the status board in the same step" | none>.
 Data: <"touches <surface>: follow the repo's privacy or data rules" | "no user data surface">.
+Machine: the human's machine is shared. Stop each emulator, simulator, dev server and browser
+window you start once you no longer need it, and name each one still running in every progress
+report. Never leave a window (browser, sign-in, emulator) waiting on the human: post the need as a
+board question first and open the window only after the human answers.
 Authority: <"Merge when CI is green and <review bot> is clean, then deploy as the repo's AGENTS.md
 says" | "Do not merge or deploy">. Do not widen scope; report new work you find instead.
 Done when: every acceptance criterion is met with its evidence, the PR names <ticket id>, the
 ticket is in review<, and every <review bot> round is resolved: each finding fixed or answered,
-re-checked after each push>. Then reply in at most three lines: what changed and the evidence
-(PR url, checks, review state, evidence links); what remains or what you found outside scope;
-any decision needed.
+re-checked after each push>, and nothing you started is still running. Then reply in at most
+three lines: what changed and the evidence (PR url, checks, review state, evidence links); what
+remains or what you found outside scope; any decision needed.
 If the ticket is wrong or you are blocked, stop and reply with one paragraph: what is blocked,
 what you tried, what decision you need and your recommendation.
 ```
@@ -128,6 +132,8 @@ what you tried, what decision you need and your recommendation.
   question waiting for the human, or a named external wait (who, since when, until when). If it
   has none, start a worker on it or ask the human in the same step; "in progress" with nobody on
   it is a failure. An outcome reported done gets a verification worker at once, never a wait.
+- When a worker finishes or stops, stop any emulator, simulator, dev server or window it owned
+  (its progress reports name them) that is still running.
 - After merge and verification, close the ticket and remove the worker's worktree
   (`git -C <repo-path> worktree remove <worktree-root>/<repo>-<ticket>`).
 
@@ -246,3 +252,5 @@ do not remember:
 - A scheduled poll found no new answers and skipped the audit.
 - An outcome sat in progress with no running worker, open question or named external wait, or a
   reported-done outcome waited without a verification worker.
+- A worker left an emulator, simulator, dev server or window running after it stopped needing it,
+  or left a window waiting on the human before the human answered a board question.
