@@ -121,8 +121,18 @@ what you tried, what decision you need and your recommendation.
 
 ## 5. Report
 
-The status board is where the human reads progress; chat is for discussion, direct answers and
-timely interruptions (a decision needed now, a blocker or failure that puts a commitment at risk).
+The status board is where the human reads progress and the single source of truth for what they
+must know or do; chat is for discussion, direct answers and timely interruptions (a decision
+needed now, a blocker or failure that puts a commitment at risk).
+
+- **Board first.** Anything the human needs to know or do is on the board before, or in the same
+  step as, any chat mention: an answerable question record on the card it blocks, or on one
+  "other" record when no outcome owns it. Chat never carries a need the board lacks.
+- **Needs the human.** A card needs the human only while it has an open question; derive that
+  from open questions, never from free text or a flag. A card whose text says it needs the human
+  carries at least one open question.
+- **Moves.** When you create, split, merge or move an outcome or work item, move its open
+  questions with it and fix any text on the old card that pointed at them.
 
 - **Outcome linkage.** Every task, deliverable, blocker and decision names its outcome id, or is
   additional work classified as: necessary (needed for an existing outcome; name it), proposed
@@ -141,12 +151,15 @@ timely interruptions (a decision needed now, a blocker or failure that puts a co
   saying anything in chat. Meaningful: an outcome's status changes, new evidence, a new blocker or
   risk, a discovery, a decision asked or answered. Not: each subtask, push or review round. Daily
   or weekly summaries supplement the board; they never replace it.
-- **Escalation.** One record per question, on the board, with: outcome and work item; the
+- **Escalation.** One record per question, on the card it blocks, with: outcome and work item; the
   concrete question; your recommendation; the real alternatives; what is blocked or at risk and
   the real deadline, if any. An answer, on the board or in chat, is written to that same record,
   then you resume the work and record that you did.
 - **Chat.** Point to the board item in one line. Never paste the board, post a fresh overview or
   send a message per finished subtask.
+- **Audit.** Before every report and on every restart or compaction, check that every need you
+  told the human about is an open question on the board, every open question sits on the card it
+  blocks, and no card has stale "needs you" text. Fix gaps before saying anything else.
 
 ## 6. Restart And Compaction
 
@@ -157,7 +170,8 @@ do not remember:
 2. For each worker row still in flight, check whether its worker is alive. If not, read its
    worktree (`git -C <worktree> status`, unpushed commits) and PR, then resume it or relaunch it
    with its brief plus "continue from <state>". Never start a twin.
-3. Act first on answered questions that no one has acted on yet. Record what you reconciled.
+3. Run the Report audit and fix its gaps.
+4. Act first on answered questions that no one has acted on yet. Record what you reconciled.
 
 ## Safety
 
@@ -178,3 +192,5 @@ do not remember:
 - The baseline was edited instead of recording a change, or added work was mixed into the original
   commitments.
 - Routine updates went to chat instead of the board.
+- You told the human to do or decide something that is not an open question on the board, or a
+  card says it needs the human without one.
