@@ -132,6 +132,11 @@ what you tried, what decision you need and your recommendation.
   question waiting for the human, or a named external wait (who, since when, until when). If it
   has none, start a worker on it or ask the human in the same step; "in progress" with nobody on
   it is a failure. An outcome reported done gets a verification worker at once, never a wait.
+- Only what the team cannot control is a valid wait: a person's answer, a delivery, a third
+  party. A wait the team can remove (a quota or rate limit on a test account, expired test
+  credentials, a stopped emulator, a missing test fixture, another worker's merge) is not one:
+  remove it within your authority, or route around it, and continue. When the human asks to
+  continue a waiting outcome, remove or route around the wait now.
 - When a worker finishes or stops, stop any emulator, simulator, dev server or window it owned
   (its progress reports name them) that is still running.
 - After merge and verification, close the ticket and remove the worker's worktree
@@ -252,5 +257,7 @@ do not remember:
 - A scheduled poll found no new answers and skipped the audit.
 - An outcome sat in progress with no running worker, open question or named external wait, or a
   reported-done outcome waited without a verification worker.
+- An outcome was recorded as waiting on something the team could remove itself, such as a test
+  account's usage limit, instead of the team removing it.
 - A worker left an emulator, simulator, dev server or window running after it stopped needing it,
   or left a window waiting on the human before the human answered a board question.
