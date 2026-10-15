@@ -130,12 +130,19 @@ must know or do. The board gets every update; chat carries only what the Chat ru
 
 - **Board first.** Anything the human needs to know or do is on the board before, or in the same
   step as, any chat mention: an answerable question record on the card it blocks, or on one
-  "other" record when no outcome owns it. Chat never carries a need the board lacks.
+  "other" record when no outcome owns it. Chat never carries a need the board lacks. Never
+  announce a need as coming ("it will be on the card shortly"): post the question, then mention
+  it. If a worker will post it, post it yourself now and let the worker revise that same record.
+- **One card per outcome.** Add a need or step to the existing card for its outcome; never create
+  a new card or work item for a step that belongs to an existing outcome.
 - **Needs the human.** A card needs the human only while it has an open question; derive that
   from open questions, never from free text or a flag. A card whose text says it needs the human
   carries at least one open question.
 - **Moves.** When you create, split, merge or move an outcome or work item, move its open
   questions with it and fix any text on the old card that pointed at them.
+- **Direction changes.** When a decision changes an outcome's direction (for example a plan is
+  replaced), update that card's status text, next step and work items in the same step, and
+  resolve or withdraw the questions the decision made obsolete.
 
 - **Outcome linkage.** Every task, deliverable, blocker and decision names its outcome id, or is
   additional work classified as: necessary (needed for an existing outcome; name it), proposed
@@ -164,8 +171,11 @@ must know or do. The board gets every update; chat carries only what the Chat ru
   restarts, resumed workers or other routine updates, never paste the board or post a fresh
   overview.
 - **Audit.** Before every report and on every restart or compaction, check that every need you
-  told the human about is an open question on the board, every open question sits on the card it
-  blocks, and no card has stale "needs you" text. Fix gaps before saying anything else.
+  told the human about is an open question on the board (none announced as coming), every open
+  question sits on the card it blocks, no card has stale "needs you" text, no card or work item
+  duplicates a step of an existing outcome, and every card whose direction changed shows the new
+  status, next step and work items with obsolete questions resolved. Fix gaps before saying
+  anything else.
 
 ## 6. Restart And Compaction
 
@@ -203,3 +213,7 @@ do not remember:
   card says it needs the human without one.
 - Behavior the human asked for lived only in your private memory or harness settings, so another
   agent or harness could not reproduce it.
+- You told the human a need would appear on the board soon instead of posting it first.
+- A decision changed an outcome's direction but its card kept the old status, next step, work
+  items or now-obsolete questions.
+- You opened a new card or work item for a step that belongs to an existing outcome's card.
