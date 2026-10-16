@@ -187,6 +187,13 @@ must know or do. The board gets every update; chat carries only what the Chat ru
   concrete question; your recommendation; the real alternatives; what is blocked or at risk and
   the real deadline, if any. An answer, on the board or in chat, is written to that same record,
   then you resume the work and record that you did.
+- **Thread title.** A lead or worker session that works on one card titles itself
+  `<card id> · <card title>`, exactly as the board shows the card; card titles say what the
+  outcome delivers, so they read well as thread titles. Check it after the first plan round, once
+  the card and its title are settled, and rename the session if it differs. When the card's title
+  changes, rename the session in the same step. Use the runtime's rename (T3 Code:
+  `t3_thread_update`; other runtimes: their equivalent); if it cannot rename its session, skip
+  this silently.
 - **Chat.** Chat carries only: answers to what the human asked or told you; a worker or outcome
   that finished and is verified done; housekeeping you finished (see Housekeeping); something
   broken or blocked that needs the human, already on the board. Each is one line naming the board item. Never send progress notes, merges,
@@ -201,8 +208,9 @@ must know or do. The board gets every update; chat carries only what the Chat ru
   question on the board (none announced as coming), every open question sits on the card it
   blocks, no card has stale "needs you" text, no card or work item duplicates a step of an
   existing outcome, and every card whose direction changed shows the new status, next step and
-  work items with obsolete questions resolved, and every started, unfinished outcome has something
-  moving it (see Follow Through). Resolve or withdraw every open question whose
+  work items with obsolete questions resolved, every started, unfinished outcome has something
+  moving it (see Follow Through), and every session on one card is titled as that card (see
+  Thread title). Resolve or withdraw every open question whose
   subject already happened or was decided elsewhere (merged, done, answered in chat), and check
   that the board's needs-the-human count equals the items it lists. Fix gaps before saying
   anything else.
@@ -265,5 +273,7 @@ do not remember:
   reported-done outcome waited without a verification worker.
 - An outcome was recorded as waiting on something the team could remove itself, such as a test
   account's usage limit, instead of the team removing it.
+- A session working on one card kept a title that does not match the card's id and title on the
+  board, after the first plan round or a card rename.
 - A worker left an emulator, simulator, dev server or window running after it stopped needing it,
   or left a window waiting on the human before the human answered a board question.
