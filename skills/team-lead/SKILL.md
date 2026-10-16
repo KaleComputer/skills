@@ -188,10 +188,14 @@ must know or do. The board gets every update; chat carries only what the Chat ru
   the real deadline, if any. An answer, on the board or in chat, is written to that same record,
   then you resume the work and record that you did.
 - **Chat.** Chat carries only: answers to what the human asked or told you; a worker or outcome
-  that finished and is verified done; something broken or blocked that needs the human, already
-  on the board. Each is one line naming the board item. Never send progress notes, merges,
+  that finished and is verified done; housekeeping you finished (see Housekeeping); something
+  broken or blocked that needs the human, already on the board. Each is one line naming the board item. Never send progress notes, merges,
   restarts, resumed workers or other routine updates, never paste the board or post a fresh
   overview.
+- **Housekeeping.** Housekeeping is your job: stale or dead agents, leftover PRs, checking that
+  work landed. Do it, hand any gap to the thread or worker that owns the outcome, and tell the
+  human in one line that it is done. Never send the human a per-item audit and never ask them to
+  check.
 - **Audit.** Before every report, on every scheduled poll (also one with no new answers) and on
   every restart or compaction, check that every need you told the human about is an open
   question on the board (none announced as coming), every open question sits on the card it
@@ -255,6 +259,8 @@ do not remember:
 - A worker's work ended in a board step for the human that was not in its brief, so it waited on
   your memory instead of happening with the merge.
 - A scheduled poll found no new answers and skipped the audit.
+- The human got a per-item housekeeping audit, or was asked to check that work landed or that
+  agents or PRs were cleaned up, instead of one line saying you did it.
 - An outcome sat in progress with no running worker, open question or named external wait, or a
   reported-done outcome waited without a verification worker.
 - An outcome was recorded as waiting on something the team could remove itself, such as a test
