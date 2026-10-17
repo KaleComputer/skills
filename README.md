@@ -54,11 +54,11 @@ edits loses track, and parallel agents trip over each other in one checkout. Tea
 session the lead: it plans from your issue tracker and docs, cuts the work into one-ticket,
 one-PR, one-repo tickets tied to the plan's outcomes, asks you every open question in one batch,
 and launches when you approve. Then it runs worker subagents, each in its own git worktree,
-following that repo's `AGENTS.md` and review loop. It keeps live state on a status board instead
-of in chat: every update names its outcome, done is verified against evidence before it counts,
-the original commitments are never rewritten, and the board survives restarts and context
-compaction. Repos, tracker, plan, status board and what the lead may decide alone come from the
-lead folder's `AGENTS.md`.
+following that repo's `AGENTS.md` and review loop. It keeps durable state in the tracker and the
+runtime's task records, not in its context, so restarts and context compaction lose nothing, and
+asks you each decision in the thread that owns the work: every update names its outcome, done is
+verified against evidence before it counts, and the original commitments are never rewritten.
+Repos, tracker, plan and what the lead may decide alone come from the lead folder's `AGENTS.md`.
 
 **Use when:**
 
