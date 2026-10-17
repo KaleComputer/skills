@@ -28,7 +28,6 @@ default:
 | Worktree root | `../.worktrees` (absolute: resolve it once) |
 | Review bot and how to read its findings | none |
 | Plan: the project whose outcomes you report against | the project or milestone the human names |
-| Status board: durable live state the human reads | `STATE.md` in the lead folder |
 | Authority: what the lead and workers decide alone, record, or ask first | ask before merging, deploying, spending, messaging people, changing access and destructive actions; decide the rest and record it |
 | Launch approval | the human approves each ticket set before launch |
 
@@ -43,8 +42,8 @@ wins for that repo; raise the conflict with the human.
 1. Read the requested project or milestone in the tracker, the docs it links, and the repo state
    the work depends on.
 2. Give every committed outcome a stable id (its tracker milestone, or a short id per dated line)
-   and record the baseline on the status board: the outcomes, their target dates and the date
-   they were committed. The baseline is never edited afterwards (see Report).
+   and record the baseline on the plan in the tracker: the outcomes, their target dates and the
+   date they were committed. The baseline is never edited afterwards (see Report).
 3. List existing tickets in that scope, including in-progress and in-review ones with open PRs.
    Extend or reuse them; never plan a twin.
 4. Cut the work into tickets that each fit one PR in one repo. A cross-repo feature becomes one
@@ -58,7 +57,7 @@ wins for that repo; raise the conflict with the human.
    assigned to the human who owns the plan, ready to start. Each has a goal, scope, and
    acceptance criteria a worker can check with evidence.
 2. Collect the open product, design, privacy and scope questions across all tickets and ask them
-   in one batch, each in the escalation format (see Report). Write the answers into the tickets.
+   in one batch, each as an ask (see Report). Write the answers into the tickets.
 3. Launch as the Launch approval setting says. A missing privacy or data-handling decision
    blocks that ticket.
 
@@ -71,12 +70,8 @@ wins for that repo; raise the conflict with the human.
   survive. If the harness offers child tasks that outlive a restart, prefer those.
 - The worker gets the brief below as its whole prompt. It creates its own worktree, so you never
   touch the main checkout.
-- Before launching, write the worker's row on the status board: outcome, ticket, worktree, branch,
-  worker or task id, and the brief (or where it is stored). Update the row on every report. Your
-  context is not state: compaction and restarts erase it.
-- When a ticket's work ends in something for the human (a question to post, a question to close
-  once its PR merges), put that board step in the brief so the worker does it in the same step as
-  the merge or delivery, never left to your memory.
+- Your context is not state: compaction and restarts erase it. Keep each worker's state where
+  State (see Report) says.
 - Launch every approved ticket at once, dependent ones included; each worker has its own worktree
   and branch, so they never block each other. Never cap or serialize workers.
 - Integration is your job: when a ticket another one depends on merges, or two PRs conflict, tell
@@ -100,12 +95,11 @@ worktree. Then read that worktree's AGENTS.md and follow it. Commit and push you
 meaningful step so a restart loses nothing.
 Goal: <one sentence>.
 Skills: <ticket skill, repo skills><, none>.
-Board: <"when <event>, post | close <question> on the status board in the same step" | none>.
 Data: <"touches <surface>: follow the repo's privacy or data rules" | "no user data surface">.
 Machine: the human's machine is shared. Stop each emulator, simulator, dev server and browser
 window you start once you no longer need it, and name each one still running in every progress
-report. Never leave a window (browser, sign-in, emulator) waiting on the human: post the need as a
-board question first and open the window only after the human answers.
+report. Never leave a window (browser, sign-in, emulator) waiting on the human: ask the human first and
+open the window only after the human answers.
 Authority: <"Merge when CI is green and <review bot> is clean, then deploy as the repo's AGENTS.md
 says" | "Do not merge or deploy">. Do not widen scope; report new work you find instead.
 Done when: every acceptance criterion is met with its evidence, the PR names <ticket id>, the
@@ -122,14 +116,14 @@ what you tried, what decision you need and your recommendation.
 - Workers report back when they finish or get blocked; check open PRs (for example with
   `gh pr view`) when you need state in between.
 - Answer worker questions from the ticket, repo and docs. Decisions the Authority setting keeps
-  with the human go to the human in the escalation format; never guess them. Resume the same
+  with the human go to the human as an ask; never guess them. Resume the same
   worker with the answer instead of spawning a new one.
 - A worker's "done" is reported, not verified. Mark it verified only after you checked the
   evidence yourself: PR merged or mergeable, checks green, review bot clean, and each acceptance
   item's evidence opens and shows what it claims. Work that needs the human's look is awaiting
   review, not done.
 - Every started, unfinished outcome always has something moving it: a running worker, an open
-  question waiting for the human, or a named external wait (who, since when, until when). If it
+  ask waiting for the human, or a named external wait (who, since when, until when). If it
   has none, start a worker on it or ask the human in the same step; "in progress" with nobody on
   it is a failure. An outcome reported done gets a verification worker at once, never a wait.
 - Only what the team cannot control is a valid wait: a person's answer, a delivery, a third
@@ -144,28 +138,17 @@ what you tried, what decision you need and your recommendation.
 
 ## 5. Report
 
-The status board is where the human reads progress and the single source of truth for what they
-must know or do. The board gets every update; chat carries only what the Chat rule allows.
-
-- **Board first.** Anything the human needs to know or do is on the board before, or in the same
-  step as, any chat mention: an answerable question record on the card it blocks, or on one
-  "other" record when no outcome owns it. Chat never carries a need the board lacks. Never
-  announce a need as coming ("it will be on the card shortly"): post the question, then mention
-  it. If a worker will post it, post it yourself now and let the worker revise that same record.
-- **One card per outcome.** Add a need or step to the existing card for its outcome; never create
-  a new card or work item for a step that belongs to an existing outcome.
-- **Needs the human.** A card needs the human only while it has an open question; derive that
-  from open questions, never from free text or a flag. A card whose text says it needs the human
-  carries at least one open question.
-- **Moves.** When you create, split, merge or move an outcome or work item, move its open
-  questions with it and fix any text on the old card that pointed at them.
-- **Board UI changes.** The board's data is the truth and enough to audit content. After a change
-  to the board's UI, the worker who made it verifies the views the human uses (for example
-  overview, zoomed-in timeline, phone width) with screenshots.
+- **State.** Durable state lives in the tracker (tickets, the plan project, change records on the
+  plan) and the runtime's durable task records (for example child tasks that survive restarts),
+  never only in your context.
+- **Asks.** A need for the human is asked in the session's own thread (the thread that owns the
+  work), with the runtime's question or pending-request feature where it has one. One ask per
+  decision, with: the concrete question; your recommendation; the real alternatives; short
+  context (outcome, what is blocked or at risk, the real deadline if any); any how-to as numbered
+  steps. Never announce an ask as coming; ask it. When answered, write the answer where State
+  says, resume the work and record that you did.
 - **Direction changes.** When a decision changes an outcome's direction (for example a plan is
-  replaced), update that card's status text, next step and work items in the same step, and
-  resolve or withdraw the questions the decision made obsolete.
-
+  replaced), update its tickets in the same step and withdraw the asks the decision made obsolete.
 - **Outcome linkage.** Every task, deliverable, blocker and decision names its outcome id, or is
   additional work classified as: necessary (needed for an existing outcome; name it), proposed
   scope (new direction; proposed until accepted as Authority says) or deferred (recorded, not
@@ -177,63 +160,50 @@ must know or do. The board gets every update; chat carries only what the Chat ru
   (you checked the evidence), awaiting review (needs the human), done. Never show reported work
   as verified.
 - **Baseline.** Never rewrite the original commitments to make progress look better. Each change
-  to an outcome, date, priority or scope is a change record: date, what changed, reason, who
-  decided, impact on commitments.
-- **Persist as it happens.** Write each meaningful update to the board when it happens, before
-  saying anything in chat. Meaningful: an outcome's status changes, new evidence, a new blocker or
-  risk, a discovery, a decision asked or answered. Not: each subtask, push or review round. Daily
-  or weekly summaries supplement the board; they never replace it.
-- **Escalation.** One record per question, on the card it blocks, with: outcome and work item; the
-  concrete question; your recommendation; the real alternatives; what is blocked or at risk and
-  the real deadline, if any. An answer, on the board or in chat, is written to that same record,
-  then you resume the work and record that you did.
-- **Thread title.** A lead or worker session that works on one card titles itself
-  `<card id> · <card title>`, exactly as the board shows the card; card titles say what the
-  outcome delivers, so they read well as thread titles. Check it after the first plan round, once
-  the card and its title are settled, and rename the session if it differs. When the card's title
-  changes, rename the session in the same step. Use the runtime's rename (T3 Code:
+  to an outcome, date, priority or scope is a change record on the plan in the tracker: date,
+  what changed, reason, who decided, impact on commitments.
+- **Thread title.** A lead or worker session that works on one outcome titles itself
+  `<outcome id> · <outcome title>`; outcome titles say what the outcome delivers, so they read
+  well as thread titles. Check it after the first plan round, once the outcome and its title are
+  settled, and rename the session if it differs. When the outcome's title changes, rename the
+  session in the same step. Use the runtime's rename (T3 Code:
   `t3_thread_update`; other runtimes: their equivalent); if it cannot rename its session, skip
   this silently.
 - **Chat.** Chat carries only: answers to what the human asked or told you; a worker or outcome
   that finished and is verified done; housekeeping you finished (see Housekeeping); something
-  broken or blocked that needs the human, already on the board. Each is one line naming the board item. Never send progress notes, merges,
-  restarts, resumed workers or other routine updates, never paste the board or post a fresh
+  broken or blocked that needs the human, asked as an ask. Each is one line. Never send progress
+  notes, merges, restarts, resumed workers or other routine updates, and never post a fresh
   overview.
 - **Housekeeping.** Housekeeping is your job: stale or dead agents, leftover PRs, checking that
   work landed. Do it, hand any gap to the thread or worker that owns the outcome, and tell the
   human in one line that it is done. Never send the human a per-item audit and never ask them to
   check.
 - **Audit.** Before every report, on every scheduled poll (also one with no new answers) and on
-  every restart or compaction, check that every need you told the human about is an open
-  question on the board (none announced as coming), every open question sits on the card it
-  blocks, no card has stale "needs you" text, no card or work item duplicates a step of an
-  existing outcome, and every card whose direction changed shows the new status, next step and
-  work items with obsolete questions resolved, every started, unfinished outcome has something
-  moving it (see Follow Through), and every session on one card is titled as that card (see
-  Thread title). Resolve or withdraw every open question whose
-  subject already happened or was decided elsewhere (merged, done, answered in chat), and check
-  that the board's needs-the-human count equals the items it lists. Fix gaps before saying
-  anything else.
+  every restart or compaction, check that every need you told the human about is an open ask in
+  the thread that owns it (none announced as coming), every started, unfinished outcome has
+  something moving it (see Follow Through), and every session on one outcome is titled as that
+  outcome (see Thread title). Withdraw every open ask whose subject already happened or was
+  decided elsewhere (merged, done, answered in chat). Fix gaps before saying anything else.
 
 ## 6. Restart And Compaction
 
 On every session start, after a context compaction, and whenever a worker report mentions work you
 do not remember:
 
-1. Read the status board, then the plan, then the open tickets and PRs in its scope.
-2. For each worker row still in flight, check whether its worker is alive. If not, read its
+1. Read the plan, the open tickets and PRs in its scope, and the runtime's task list.
+2. For each worker task still in flight, check whether its worker is alive. If not, read its
    worktree (`git -C <worktree> status`, unpushed commits) and PR, then resume it or relaunch it
    with its brief plus "continue from <state>". Never start a twin.
 3. For every worker that stopped, finished or died, check what it actually delivered (PR, files,
-   board records) against each item in its brief, and finish or resume the missing parts. A
-   promised board question or other item meant for the human comes first: post it yourself now.
+   asks) against each item in its brief, and finish or resume the missing parts. A promised ask
+   or other item meant for the human comes first: ask it yourself now.
 4. Run the Report audit and fix its gaps.
-5. Act first on answered questions that no one has acted on yet. Record what you reconciled.
+5. Act first on answered asks that no one has acted on yet. Record what you reconciled.
 
 ## Safety
 
-- No secrets and no raw personal or customer data in tickets, briefs, comments, the status board
-  or reports; summarize and de-identify.
+- No secrets and no raw personal or customer data in tickets, briefs, comments, asks or
+  reports; summarize and de-identify.
 - Repo work happens only in worker worktrees on branches with PRs, never on the default branch.
 
 ## Failure Modes
@@ -248,32 +218,25 @@ do not remember:
 - State lived only in your context or in a temporary file, and a restart or compaction lost it.
 - The baseline was edited instead of recording a change, or added work was mixed into the original
   commitments.
-- Routine updates (progress, merges, restarts, resumed workers) went to chat instead of only the
-  board.
-- You told the human to do or decide something that is not an open question on the board, or a
-  card says it needs the human without one.
+- Routine updates (progress, merges, restarts, resumed workers) went to chat.
+- You told the human to do or decide something that is not an open ask in the owning thread, or
+  announced an ask as coming instead of asking it.
 - Behavior the human asked for lived only in your private memory or harness settings, so another
   agent or harness could not reproduce it.
-- You told the human a need would appear on the board soon instead of posting it first.
-- A decision changed an outcome's direction but its card kept the old status, next step, work
-  items or now-obsolete questions.
-- You opened a new card or work item for a step that belongs to an existing outcome's card.
-- A worker stopped (finished, died or restarted) before delivering part of its brief, such as a
-  board question for the human, and no one compared its output to the brief.
-- An open question asked the human for something that had already happened or been decided (a PR
-  already merged, a step done, an answer given in chat), or the board's needs-the-human count did
-  not match the items it lists.
-- A change to the board's UI shipped without screenshots of the views the human uses.
-- A worker's work ended in a board step for the human that was not in its brief, so it waited on
-  your memory instead of happening with the merge.
+- A decision changed an outcome's direction but its tickets or now-obsolete asks were left as
+  they were.
+- A worker stopped (finished, died or restarted) before delivering part of its brief, such as an
+  ask for the human, and no one compared its output to the brief.
+- An open ask asked the human for something that had already happened or been decided (a PR
+  already merged, a step done, an answer given in chat).
 - A scheduled poll found no new answers and skipped the audit.
 - The human got a per-item housekeeping audit, or was asked to check that work landed or that
   agents or PRs were cleaned up, instead of one line saying you did it.
-- An outcome sat in progress with no running worker, open question or named external wait, or a
+- An outcome sat in progress with no running worker, open ask or named external wait, or a
   reported-done outcome waited without a verification worker.
 - An outcome was recorded as waiting on something the team could remove itself, such as a test
   account's usage limit, instead of the team removing it.
-- A session working on one card kept a title that does not match the card's id and title on the
-  board, after the first plan round or a card rename.
+- A session working on one outcome kept a title that does not match the outcome's id and title,
+  after the first plan round or a rename.
 - A worker left an emulator, simulator, dev server or window running after it stopped needing it,
-  or left a window waiting on the human before the human answered a board question.
+  or opened a window waiting on the human before the human answered the ask.
