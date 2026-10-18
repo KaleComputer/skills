@@ -27,7 +27,7 @@ default:
 | Ticket skill to write and close tickets with | none: write them yourself |
 | Worktree root | `../.worktrees` (absolute: resolve it once) |
 | Review bot and how to read its findings | none |
-| Plan: the project whose outcomes you report against | the project or milestone the human names |
+| Plan: the initiative (or project) whose outcomes you report against | the initiative, project or milestone the human names |
 | Authority: what the lead and workers decide alone, record, or ask first | ask before merging, deploying, spending, messaging people, changing access and destructive actions; decide the rest and record it |
 | Launch approval | the human approves each ticket set before launch |
 
@@ -41,9 +41,11 @@ wins for that repo; raise the conflict with the human.
 
 1. Read the requested project or milestone in the tracker, the docs it links, and the repo state
    the work depends on.
-2. Give every committed outcome a stable id (its tracker milestone, or a short id per dated line)
-   and record the baseline on the plan in the tracker: the outcomes, their target dates and the
-   date they were committed. The baseline is never edited afterwards (see Report).
+2. Give every committed outcome a plain name that says what it delivers and its own home in the
+   tracker: a small project under the release's initiative, or a milestone where the tracker has
+   no initiatives. Never invent short codes or keys for outcomes. Record the baseline on the plan
+   in the tracker: the outcomes, their target dates and the date they were committed. The
+   baseline is never edited afterwards (see Report).
 3. List existing tickets in that scope, including in-progress and in-review ones with open PRs.
    Extend or reuse them; never plan a twin.
 4. Cut the work into tickets that each fit one PR in one repo. A cross-repo feature becomes one
@@ -53,7 +55,7 @@ wins for that repo; raise the conflict with the human.
 
 ## 2. Tickets
 
-1. Write each ticket (with the ticket skill if one is set) in the plan's project and milestone,
+1. Write each ticket (with the ticket skill if one is set) in its outcome's project or milestone,
    assigned to the human who owns the plan, ready to start. Each has a goal, scope, and
    acceptance criteria a worker can check with evidence.
 2. Collect the open product, design, privacy and scope questions across all tickets and ask them
@@ -83,7 +85,7 @@ wins for that repo; raise the conflict with the human.
 You are a worker, not the team lead. The lead's no-edit rule does not apply to you; your rules
 are this brief and the AGENTS.md of the repo you work in.
 Ticket: <ticket id> <url>. Read it fully first; it is the contract.
-Outcome: <outcome id and line> | additional work: <necessary for <outcome id> | proposed scope | deferred>.
+Outcome: <outcome name> | additional work: <necessary for <outcome name> | proposed scope | deferred>.
 Repo: <worktree-root>/<repo>-<ticket>, your own worktree of <repo-path>. Create it, work only
 there, and never touch the main checkout:
   mkdir -p <worktree-root>
@@ -138,8 +140,8 @@ what you tried, what decision you need and your recommendation.
 
 ## 5. Report
 
-- **State.** Durable state lives in the tracker (tickets, the plan project, change records on the
-  plan) and the runtime's durable task records (for example child tasks that survive restarts),
+- **State.** Durable state lives in the tracker (tickets, the outcome projects, change records on
+  the plan) and the runtime's durable task records (for example child tasks that survive restarts),
   never only in your context.
 - **Asks.** A need for the human is asked in the session's own thread (the thread that owns the
   work), with the runtime's question or pending-request feature where it has one. One ask per
@@ -149,7 +151,7 @@ what you tried, what decision you need and your recommendation.
   says, resume the work and record that you did.
 - **Direction changes.** When a decision changes an outcome's direction (for example a plan is
   replaced), update its tickets in the same step and withdraw the asks the decision made obsolete.
-- **Outcome linkage.** Every task, deliverable, blocker and decision names its outcome id, or is
+- **Outcome linkage.** Every task, deliverable, blocker and decision names its outcome, or is
   additional work classified as: necessary (needed for an existing outcome; name it), proposed
   scope (new direction; proposed until accepted as Authority says) or deferred (recorded, not
   worked now). Say what each discovery does to the dated commitments.
@@ -162,9 +164,9 @@ what you tried, what decision you need and your recommendation.
 - **Baseline.** Never rewrite the original commitments to make progress look better. Each change
   to an outcome, date, priority or scope is a change record on the plan in the tracker: date,
   what changed, reason, who decided, impact on commitments.
-- **Thread title.** A lead or worker session that works on one outcome titles itself
-  `<outcome id> · <outcome title>`; outcome titles say what the outcome delivers, so they read
-  well as thread titles. Check it after the first plan round, once the outcome and its title are
+- **Thread title.** A lead or worker session that works on one outcome titles itself with the
+  outcome's name, with no code or key prefix; outcome names say what the outcome delivers, so they
+  read well as thread titles. Check it after the first plan round, once the outcome and its title are
   settled, and rename the session if it differs. When the outcome's title changes, rename the
   session in the same step. Use the runtime's rename (T3 Code:
   `t3_thread_update`; other runtimes: their equivalent); if it cannot rename its session, skip
@@ -236,7 +238,7 @@ do not remember:
   reported-done outcome waited without a verification worker.
 - An outcome was recorded as waiting on something the team could remove itself, such as a test
   account's usage limit, instead of the team removing it.
-- A session working on one outcome kept a title that does not match the outcome's id and title,
+- A session working on one outcome kept a title that does not match the outcome's name,
   after the first plan round or a rename.
 - A worker left an emulator, simulator, dev server or window running after it stopped needing it,
   or opened a window waiting on the human before the human answered the ask.
