@@ -101,8 +101,11 @@ Data: <"touches <surface>: follow the repo's privacy or data rules" | "no user d
 Machine: the human's machine is shared. Stop each emulator, simulator, dev server and browser
 window you start once you no longer need it, and name each one still running in every progress
 report. Kill only the PIDs or serials you started yourself; never `pkill`, `killall` or kill by
-pattern (one broad `pkill -f` took down the human's chat app, browser and agent runtime). Never
-leave a window (browser, sign-in, emulator) waiting on the human: ask the human first and open the
+pattern (one broad `pkill -f` took down the human's chat app, browser and agent runtime). Start
+a device emulator only for the final visual check of a change a user sees in an app, never for
+backend, web, docs, copy or tests; the machine runs at most one at a time, so check the running
+devices first (`adb devices`), wait or skip if one is up, and kill yours the moment the screenshot
+is taken. Never leave a window (browser, sign-in, emulator) waiting on the human: ask the human first and open the
 window only after the human answers.
 Authority: <"Merge when CI is green and <review bot> is clean, then deploy as the repo's AGENTS.md
 says" | "Do not merge or deploy">. Do not widen scope; report new work you find instead.
