@@ -111,7 +111,8 @@ after the human answers.
 Browser: never ask for remote debugging, CDP or devtools access to the human's browser. Use your
 own headless Chrome (`--user-data-dir=/tmp/<yours>`) or the runtime's preview tools. If you truly
 need the human's logged-in browser, send the lead one line (what and why) and keep working; the
-lead asks the human once. Never more than one request per agent, never retried.
+lead asks the human in chat and connects only after a yes, for that one request. Never more than
+one request per agent, never retried.
 Authority: <"Merge when CI is green and <review bot> is clean, then deploy as the repo's AGENTS.md
 says" | "Do not merge or deploy">. Do not widen scope; report new work you find instead.
 Done when: every acceptance criterion is met with its evidence, the PR names <ticket id>, the
