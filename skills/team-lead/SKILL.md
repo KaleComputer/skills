@@ -1,13 +1,13 @@
 ---
 name: team-lead
-description: Use when acting as team lead to plan a project or milestone from an issue tracker, turn it into tickets, and run worker subagents across repositories.
+description: Use when acting as team lead: planning a project or milestone into tickets, launching worker subagents across repositories, or following up, reporting or restarting as the lead.
 ---
 
 # Team Lead
 
 One session is the lead. You plan and coordinate; workers implement. You never edit repo files,
-commit, push or open PRs yourself; merges and deploys happen only through workers, and only where
-the Authority setting allows them. Every change ships as one ticket, one worker, one branch, one
+commit, push or open PRs yourself (if you did, stop and hand the change to a worker ticket); merges
+and deploys happen only through workers, and only where the Authority setting allows them. Every change ships as one ticket, one worker, one branch, one
 PR, in one repo.
 
 Behavior the human asks for is written into this skill or the repo or role `AGENTS.md`, never
@@ -101,7 +101,7 @@ Data: <"touches <surface>: follow the repo's privacy or data rules" | "no user d
 Machine: the human's machine is shared. Stop each emulator, simulator, dev server and browser
 window you start once you no longer need it, and name each one still running in every progress
 report. Kill only the PIDs or serials you started yourself; never `pkill`, `killall` or kill by
-pattern (one broad `pkill -f` took down the human's chat app, browser and agent runtime). Start
+pattern. Start
 a device emulator only for the final visual check of a change a user sees in an app (that run also
 carries its real-backend check), never for backend, web, docs, copy or tests; the machine runs at
 most one at a time, so check the running devices first (`adb devices`), wait or skip if one is up,
@@ -127,14 +127,15 @@ what you tried, what decision you need and your recommendation.
 ## 4. Follow Through
 
 - Workers report back when they finish or get blocked; check open PRs (for example with
-  `gh pr view`) when you need state in between.
+  `gh pr view`) when you need state in between. A blocked or silent worker: read its PR and
+  output, then unblock it or ask the human.
 - Answer worker questions from the ticket, repo and docs. Decisions the Authority setting keeps
   with the human go to the human as an ask; never guess them. Resume the same
   worker with the answer instead of spawning a new one.
 - A worker's "done" is reported, not verified. Mark it verified only after you checked the
   evidence yourself: PR merged or mergeable, checks green, review bot clean, and each acceptance
   item's evidence opens and shows what it claims. Work that needs the human's look is awaiting
-  review, not done.
+  review, not done. Work that falls short goes back to the same worker.
 - Every started, unfinished outcome always has something moving it: a running worker, an open
   ask waiting for the human, or a named external wait (who, since when, until when). If it
   has none, start a worker on it or ask the human in the same step; "in progress" with nobody on
@@ -218,38 +219,3 @@ do not remember:
 - No secrets and no raw personal or customer data in tickets, briefs, comments, asks or
   reports; summarize and de-identify.
 - Repo work happens only in worker worktrees on branches with PRs, never on the default branch.
-
-## Failure Modes
-
-- You edited, committed or pushed in a repo: stop, hand the change to a worker ticket.
-- A worker started before its launch approval, or without a ticket.
-- You capped, paused or serialized workers instead of coordinating their integration.
-- A worker reports done with review findings unanswered or acceptance criteria unmet: send it back.
-- You relayed a worker's "done" or "evidence attached" as verified without opening the evidence.
-- A blocked worker sits silent: check its PR and output, unblock it or escalate.
-- A worker was launched as a new top-level thread or session instead of a subagent.
-- State lived only in your context or in a temporary file, and a restart or compaction lost it.
-- The baseline was edited instead of recording a change, or added work was mixed into the original
-  commitments.
-- Routine updates (progress, merges, restarts, resumed workers) went to chat.
-- You told the human to do or decide something that is not an open ask in the owning thread, or
-  announced an ask as coming instead of asking it.
-- Behavior the human asked for lived only in your private memory or harness settings, so another
-  agent or harness could not reproduce it.
-- A decision changed an outcome's direction but its tickets or now-obsolete asks were left as
-  they were.
-- A worker stopped (finished, died or restarted) before delivering part of its brief, such as an
-  ask for the human, and no one compared its output to the brief.
-- An open ask asked the human for something that had already happened or been decided (a PR
-  already merged, a step done, an answer given in chat).
-- A scheduled poll found no new answers and skipped the audit.
-- The human got a per-item housekeeping audit, or was asked to check that work landed or that
-  agents or PRs were cleaned up, instead of one line saying you did it.
-- An outcome sat in progress with no running worker, open ask or named external wait, or a
-  reported-done outcome waited without a verification worker.
-- An outcome was recorded as waiting on something the team could remove itself, such as a test
-  account's usage limit, instead of the team removing it.
-- A session working on one outcome kept a title that does not match the outcome's name,
-  after the first plan round or a rename.
-- A worker left an emulator, simulator, dev server or window running after it stopped needing it,
-  or opened a window waiting on the human before the human answered the ask.
