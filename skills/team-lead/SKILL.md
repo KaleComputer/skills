@@ -30,6 +30,7 @@ default:
 | Plan: the initiative (or project) whose outcomes you report against | the initiative, project or milestone the human names |
 | Authority: what the lead and workers decide alone, record, or ask first | ask before merging, deploying, spending, messaging people, changing access and destructive actions; decide the rest and record it |
 | Launch approval | the human approves each ticket set before launch |
+| Messenger: the command that reaches the human fastest (chat app, SMS, pager) | none: ask in the session's own thread |
 
 Treat the main checkouts as read-only: read the default branch with
 `git -C <repo> fetch -q && git -C <repo> show origin/<default-branch>:<path>`, never switch
@@ -161,6 +162,11 @@ what you tried, what decision you need and your recommendation.
   context (outcome, what is blocked or at risk, the real deadline if any); any how-to as numbered
   steps. Never announce an ask as coming; ask it. When answered, write the answer where State
   says, resume the work and record that you did.
+- **Blockers.** When something blocks a release, CI or the whole team, notify the human right
+  away through the fastest channel: the messenger command in Project Settings, plus the ask in the
+  owning thread; notify again when it is resolved. Keep it short and plain, no jargon: what is
+  blocked, the cause in plain words, and an ETA or what is needed from them. Never put secrets,
+  personal data or child text in a message.
 - **Direction changes.** When a decision changes an outcome's direction (for example a plan is
   replaced), update its tickets in the same step and withdraw the asks the decision made obsolete.
 - **Outcome linkage.** Every task, deliverable, blocker and decision names its outcome, or is
