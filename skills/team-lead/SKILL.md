@@ -60,9 +60,12 @@ Goal: <one sentence>.
 Skills: <repo skills to use, or none>.
 Data: <"touches <surface>: follow the repo's privacy/data rules" | "no user data surface">.
 Machine: the machine is shared. Kill only PIDs or device serials you started yourself; never
-`pkill`, `killall`, or kill by pattern. Stop every dev server, browser window, or emulator you
-started as soon as you finish. Emulators are only for final user-visible app checks (max one on the
-machine; check `adb devices` first and kill immediately after capture).
+`pkill`, `killall`, or kill by pattern. Keep local test concurrency at max 4 (e.g.
+`vitest --maxWorkers=4`, `turbo --concurrency=4`, `node --test --test-concurrency=4`), and run
+flaky hunting and repeat loops in CI only, never locally. Stop every dev server, watcher, loop,
+browser window, or emulator you started as soon as you finish. Emulators are only for final
+user-visible app checks (max one on the machine; check `adb devices` first and kill immediately
+after capture).
 Browser: never ask for CDP/remote debugging on the human's browser or GUI-automate their personal
 apps. Use headless Chrome (`--user-data-dir=/tmp/<yours>`) or T3 preview tools.
 Authority: <"Merge on green CI and clean review bot; never revert/delete/cancel/cut/hide without
